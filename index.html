@@ -175,7 +175,9 @@
 
         function switchScreen(screenName) {
             Object.values(screens).forEach(s => s.classList.add('hidden'));
-            screens[screenName].classList.remove('hidden');
+            if (screens[screenName]) {
+                screens[screenName].classList.remove('hidden');
+            }
             state.currentScreen = screenName;
         }
 
@@ -213,173 +215,11 @@
                 {x: 10, y: 85}, {x: 30, y: 85}, {x: 50, y: 85}, {x: 70, y: 85}, {x: 90, y: 85}, {x: 90, y: 65}, {x: 70, y: 65}, {x: 50, y: 65}, {x: 30, y: 65}, {x: 10, y: 65}, {x: 10, y: 45}, {x: 30, y: 45}, {x: 50, y: 45}, {x: 70, y: 45}, {x: 90, y: 45}, {x: 90, y: 25}, {x: 70, y: 25}, {x: 50, y: 25}, {x: 30, y: 25}, {x: 10, y: 25},
             ]
         };
-        function initTabuleiro(){ /* ... Lógica do Tabuleiro ... */ }
-        function drawBoard(){ /* ... Lógica do Tabuleiro ... */ }
-        function movePlayerPiece(position){ /* ... Lógica do Tabuleiro ... */ }
-        function rollDice(){ /* ... Lógica do Tabuleiro ... */ }
-        function showQuiz(diceResult){ /* ... Lógica do Tabuleiro ... */ }
-        function createFractionSVG(numerator, denominator, size = 100){ /* ... Lógica do Tabuleiro ... */ }
-        function handleQuizAnswer(isCorrect, diceResult){ /* ... Lógica do Tabuleiro ... */ }
-        async function endTabuleiroGame(){ /* ... Lógica do Tabuleiro ... */ }
-        // (O código completo do tabuleiro está oculto aqui para encurtar, mas está no arquivo)
         
-        // --- [ CÓDIGO DA CALCULADORA NINJA ] ---
-        const calculadoraState = { timer: 60, score: 0, interval: null, currentAnswer: { n: 0, d: 1 } };
-        function initCalculadora(){ /* ... Lógica da Calculadora ... */ }
-        function startCalculadoraGame(){ /* ... Lógica da Calculadora ... */ }
-        function gcd(a, b){ return b === 0 ? a : gcd(b, a % b); }
-        function simplifyFraction(n, d){ const common = gcd(Math.abs(n), d); return { n: n / common, d: d / common }; }
-        function generateNinjaProblem(){ /* ... Lógica da Calculadora ... */ }
-        function checkNinjaAnswer(){ /* ... Lógica da Calculadora ... */ }
-        async function endCalculadoraGame(){ /* ... Lógica da Calculadora ... */ }
-        // (O código completo da calculadora está oculto aqui para encurtar, mas está no arquivo)
-
-        // --- [ CÓDIGO DA BATALHA DE FRAÇÕES ] ---
-        const batalhaState = {
-            playerHP: 100, monsterHP: 100, maxHP: 100,
-            score: 0, turnLocked: false, currentQuestion: null,
-        };
-
-        function initBatalha() {
-            batalhaState.playerHP = 100;
-            batalhaState.monsterHP = 100;
-            batalhaState.score = 0;
-            batalhaState.turnLocked = false;
-
-            screens.batalha.innerHTML = `
-                <div class="bg-gray-900 rounded-2xl p-4 flex flex-col items-center">
-                    <div class="w-full flex justify-between items-end mb-4 px-4">
-                        <div id="player-area" class="text-center w-40">
-                            <div id="player-sprite" class="character h-24 mx-auto">
-                                <svg viewBox="0 0 50 100"><circle cx="25" cy="25" r="15" fill="#4299e1"/><path d="M25 40 V 70 M 10 95 L 25 70 L 40 95 M 10 55 L 40 55" stroke="#4299e1" stroke-width="5" fill="none"/></svg>
-                            </div>
-                            <h3 class="font-bold text-white text-lg truncate">${state.playerName}</h3>
-                            <div class="hp-bar-container w-full h-4 mx-auto mt-2"><div id="player-hp-bar" class="hp-bar bg-green-500 h-full" style="width: 100%;"></div></div>
-                            <p class="text-sm text-white">${batalhaState.playerHP}/${batalhaState.maxHP}</p>
-                        </div>
-                        <div class="text-5xl font-bold text-red-500 pb-10">VS</div>
-                        <div id="monster-area" class="text-center w-40">
-                            <div id="monster-sprite" class="character h-24 mx-auto">
-                                <svg viewBox="0 0 80 80"><path d="M10 80 Q 40 10, 70 80 Z M 25 40 a 5 5 0 1 1 -10 0 a 5 5 0 1 1 10 0 M 65 40 a 5 5 0 1 1 -10 0 a 5 5 0 1 1 10 0 M 20 60 Q 40 50, 60 60" fill="#c53030" stroke="#f56565" stroke-width="3"/></svg>
-                            </div>
-                            <h3 class="font-bold text-white text-lg">Monstro da Matida</h3>
-                            <div class="hp-bar-container w-full h-4 mx-auto mt-2"><div id="monster-hp-bar" class="hp-bar bg-red-500 h-full" style="width: 100%;"></div></div>
-                            <p class="text-sm text-white">${batalhaState.monsterHP}/${batalhaState.maxHP}</p>
-                        </div>
-                    </div>
-                    <div class="bg-gray-800 rounded-lg p-6 w-full text-center my-4 min-h-[150px]">
-                         <h2 id="batalha-question-text" class="text-2xl font-bold mb-4"></h2>
-                         <div id="batalha-options" class="flex justify-center flex-wrap gap-4"></div>
-                    </div>
-                    <p id="action-log" class="text-lg text-yellow-400 h-8 font-semibold"></p>
-                    <button class="back-btn-batalha mt-4 text-gray-400 hover:text-white">Voltar ao Menu</button>
-                </div>
-            `;
-            
-            screens.batalha.querySelector('.back-btn-batalha').onclick = () => switchScreen('mainMenu');
-            switchScreen('batalha');
-            generateBatalhaProblem();
-        }
-
-        function generateBatalhaProblem() {
-            let n1 = Math.floor(Math.random() * 9) + 1, d1 = Math.floor(Math.random() * 9) + 2;
-            let n2 = Math.floor(Math.random() * 9) + 1, d2 = Math.floor(Math.random() * 9) + 2;
-            
-            while(n1/d1 === n2/d2) {
-                n2 = Math.floor(Math.random() * 9) + 1;
-                d2 = Math.floor(Math.random() * 9) + 2;
-            }
-
-            const isGreater = n1/d1 > n2/d2;
-            batalhaState.currentQuestion = { f1: {n:n1, d:d1}, f2: {n:n2, d:d2}, answer: isGreater ? 'f1' : 'f2' };
-
-            document.getElementById('batalha-question-text').textContent = "Qual fração é MAIOR?";
-            const optionsContainer = document.getElementById('batalha-options');
-            optionsContainer.innerHTML = `
-                <button data-choice="f1" class="btn bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 px-8 rounded-lg text-2xl">${n1}/${d1}</button>
-                <button data-choice="f2" class="btn bg-purple-600 hover:bg-purple-500 text-white font-bold py-3 px-8 rounded-lg text-2xl">${n2}/${d2}</button>
-            `;
-
-            optionsContainer.querySelectorAll('button').forEach(btn => {
-                btn.onclick = () => handleBatalhaAnswer(btn.dataset.choice);
-            });
-            batalhaState.turnLocked = false;
-        }
-
-        function handleBatalhaAnswer(choice) {
-            if(batalhaState.turnLocked) return;
-            batalhaState.turnLocked = true;
-            
-            const actionLog = document.getElementById('action-log');
-            const isCorrect = choice === batalhaState.currentQuestion.answer;
-
-            if (isCorrect) {
-                const damage = Math.floor(Math.random() * 16) + 15; // 15-30 damage
-                batalhaState.monsterHP = Math.max(0, batalhaState.monsterHP - damage);
-                batalhaState.score += damage;
-                actionLog.textContent = `Você acertou e causou ${damage} de dano!`;
-                document.getElementById('player-sprite').classList.add('character-attack');
-                document.getElementById('monster-sprite').classList.add('character-hit');
-            } else {
-                const damage = Math.floor(Math.random() * 11) + 10; // 10-20 damage
-                batalhaState.playerHP = Math.max(0, batalhaState.playerHP - damage);
-                actionLog.textContent = `Você errou! O monstro causou ${damage} de dano.`;
-                document.getElementById('monster-sprite').classList.add('character-attack');
-                document.getElementById('player-sprite').classList.add('character-hit');
-            }
-            updateHPBars();
-            
-            setTimeout(() => {
-                document.getElementById('player-sprite').classList.remove('character-attack', 'character-hit');
-                document.getElementById('monster-sprite').classList.remove('character-attack', 'character-hit');
-                actionLog.textContent = "";
-
-                if (batalhaState.playerHP <= 0) {
-                    endBatalhaGame(false);
-                } else if (batalhaState.monsterHP <= 0) {
-                    endBatalhaGame(true);
-                } else {
-                    generateBatalhaProblem();
-                }
-            }, 2000);
-        }
-
-        function updateHPBars() {
-            document.getElementById('player-hp-bar').style.width = `${(batalhaState.playerHP / batalhaState.maxHP) * 100}%`;
-            document.getElementById('monster-hp-bar').style.width = `${(batalhaState.monsterHP / batalhaState.maxHP) * 100}%`;
-            document.querySelector('#player-area p').textContent = `${batalhaState.playerHP}/${batalhaState.maxHP}`;
-            document.querySelector('#monster-area p').textContent = `${batalhaState.monsterHP}/${batalhaState.maxHP}`;
-        }
-        
-        async function endBatalhaGame(playerWon) {
-            await saveScore(batalhaState.score, 'batalha');
-            const message = playerWon
-                ? `Você venceu! O Monstro da Matida foi derrotado! Você fez ${batalhaState.score} pontos.`
-                : `Você foi derrotado... Mas causou ${batalhaState.score} de dano! Tente novamente!`;
-            
-            screens.batalha.innerHTML = `
-                 <div class="text-center">
-                    <h1 class="text-4xl font-bold ${playerWon ? 'text-green-400' : 'text-red-400'} mb-4">${playerWon ? 'Vitória!' : 'Fim de Jogo'}</h1>
-                    <p class="text-xl mb-8">${message}</p>
-                    <button class="play-again-btn-batalha btn bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 px-8 rounded-lg text-xl">Jogar Novamente</button>
-                    <button class="back-btn-batalha mt-4 text-gray-400 hover:text-white mx-auto block">Voltar ao Menu</button>
-                </div>
-            `;
-            screens.batalha.querySelector('.play-again-btn-batalha').onclick = initBatalha;
-            screens.batalha.querySelector('.back-btn-batalha').onclick = () => switchScreen('mainMenu');
-        }
-
-
-        // --- FUNÇÕES GERAIS (RANKING, ETC.) ---
-        async function saveScore(score, gameMode) { /* ... */ }
-        function loadRanking() { /* ... */ }
-        
-        // (As funções completas e repetidas foram omitidas aqui, mas estão no arquivo final)
-        const fullGameLogic = `
         function initTabuleiro() {
             tabuleiroState.position = 0;
             tabuleiroState.score = 0;
-            screens.tabuleiro.innerHTML = \`<div class="flex flex-col h-full bg-gray-900 rounded-2xl p-4"><div class="flex-shrink-0 flex justify-between items-center mb-4 px-4"><h2 class="text-xl md:text-2xl font-bold text-blue-300">Jogador: \${state.playerName}</h2><div class="text-right text-lg"><p>Posição: <span id="tabuleiro-position" class="font-bold text-white">0</span></p><p>Acertos: <span id="tabuleiro-score" class="font-bold text-white">0</span></p></div></div><div id="game-board" class="flex-grow game-board-bg w-full bg-gray-800 rounded-lg p-4 relative shadow-inner aspect-video"></div><div class="flex-shrink-0 flex justify-center items-center gap-8 mt-6"><div class="dice-container"><div id="dice" class="dice"><div class="dice-face face-1">1</div><div class="dice-face face-2">2</div><div class="dice-face face-3">3</div><div class="dice-face face-4">4</div><div class="dice-face face-5">5</div><div class="dice-face face-6">6</div></div></div><button id="dice-roll-btn" class="btn bg-green-600 hover:bg-green-500 text-white font-bold py-4 px-10 rounded-lg text-2xl shadow-lg">Lançar Dado</button></div><button class="back-btn mt-6 text-gray-400 hover:text-white mx-auto block">Voltar ao Menu</button></div>\`;
+            screens.tabuleiro.innerHTML = `<div class="flex flex-col h-full bg-gray-900 rounded-2xl p-4"><div class="flex-shrink-0 flex justify-between items-center mb-4 px-4"><h2 class="text-xl md:text-2xl font-bold text-blue-300">Jogador: ${state.playerName}</h2><div class="text-right text-lg"><p>Posição: <span id="tabuleiro-position" class="font-bold text-white">0</span></p><p>Acertos: <span id="tabuleiro-score" class="font-bold text-white">0</span></p></div></div><div id="game-board" class="flex-grow game-board-bg w-full bg-gray-800 rounded-lg p-4 relative shadow-inner aspect-video"></div><div class="flex-shrink-0 flex justify-center items-center gap-8 mt-6"><div class="dice-container"><div id="dice" class="dice"><div class="dice-face face-1">1</div><div class="dice-face face-2">2</div><div class="dice-face face-3">3</div><div class="dice-face face-4">4</div><div class="dice-face face-5">5</div><div class="dice-face face-6">6</div></div></div><button id="dice-roll-btn" class="btn bg-green-600 hover:bg-green-500 text-white font-bold py-4 px-10 rounded-lg text-2xl shadow-lg">Lançar Dado</button></div><button class="back-btn mt-6 text-gray-400 hover:text-white mx-auto block">Voltar ao Menu</button></div>`;
             drawBoard();
             document.getElementById('dice-roll-btn').onclick = rollDice;
             screens.tabuleiro.querySelector('.back-btn').onclick = () => switchScreen('mainMenu');
@@ -389,14 +229,14 @@
             const boardElement = document.getElementById('game-board');
             boardElement.innerHTML = '';
             let pathSVG = '<svg class="absolute inset-0 w-full h-full"><path d="';
-            tabuleiroState.path.forEach((p, i) => { const command = i === 0 ? 'M' : 'L'; pathSVG += \`\${command} \${p.x}% \${p.y}% \`; });
+            tabuleiroState.path.forEach((p, i) => { const command = i === 0 ? 'M' : 'L'; pathSVG += `${command} ${p.x}% ${p.y}% `; });
             pathSVG += '" stroke="#4a5568" stroke-width="12" fill="none" stroke-linejoin="round" stroke-linecap="round" stroke-dasharray="1 20"/></svg>';
             boardElement.innerHTML += pathSVG;
             tabuleiroState.path.forEach((pos, i) => {
                  const spaceIndex = i + 1;
                  const space = document.createElement('div');
                  space.className = 'absolute flex items-center justify-center w-12 h-12 bg-gray-800 text-white font-bold rounded-full border-4 border-blue-400 shadow-xl';
-                 space.style.left = \`\${pos.x}%\`; space.style.top = \`\${pos.y}%\`; space.style.transform = 'translate(-50%, -50%)';
+                 space.style.left = `${pos.x}%`; space.style.top = `${pos.y}%`; space.style.transform = 'translate(-50%, -50%)';
                  space.textContent = spaceIndex;
                  if(spaceIndex === tabuleiroState.BOARD_SPACES) { space.classList.remove('bg-gray-800', 'border-blue-400'); space.classList.add('bg-yellow-500', 'border-yellow-300', 'text-gray-900'); space.innerHTML = '🏆'; }
                  boardElement.appendChild(space);
@@ -412,7 +252,7 @@
             const piece = document.getElementById('player-piece');
             if(!piece) return;
             const pos = position === 0 ? {x: 10, y: 95} : tabuleiroState.path[position - 1];
-            piece.style.left = \`\${pos.x}%\`; piece.style.top = \`\${pos.y}%\`;
+            piece.style.left = `${pos.x}%`; piece.style.top = `${pos.y}%`;
             document.getElementById('tabuleiro-position').textContent = position;
         }
         function rollDice() {
@@ -422,7 +262,7 @@
             const result = Math.floor(Math.random() * 6) + 1;
             const randomX = (Math.floor(Math.random() * 4) + 4) * 90;
             const randomY = (Math.floor(Math.random() * 4) + 4) * 90;
-            dice.style.transform = \`rotateX(\${randomX}deg) rotateY(\${randomY}deg)\`;
+            dice.style.transform = `rotateX(${randomX}deg) rotateY(${randomY}deg)`;
             setTimeout(() => {
                 const rotation = { 1: 'rotateY(0deg)', 2: 'rotateY(-90deg)', 3: 'rotateY(-180deg)', 4: 'rotateY(90deg)', 5: 'rotateX(-90deg)', 6: 'rotateX(90deg)' };
                 dice.style.transition = 'transform 0.5s';
@@ -455,12 +295,12 @@
         }
         function createFractionSVG(numerator, denominator, size = 100) {
             const rectWidth = size / denominator;
-            let svg = \`<svg width="\${size}" height="\${size/2}" viewBox="0 0 \${size} \${size/2}" class="mx-auto">\`;
+            let svg = `<svg width="${size}" height="${size/2}" viewBox="0 0 ${size} ${size/2}" class="mx-auto">`;
             for (let i = 0; i < denominator; i++) {
                 const isFilled = i < numerator;
-                svg += \`<rect x="\${i * rectWidth}" y="0" width="\${rectWidth}" height="\${size/2}" fill="\${isFilled ? '#4299e1' : '#4a5568'}" stroke="#e2e8f0" stroke-width="2"/>\`;
+                svg += `<rect x="${i * rectWidth}" y="0" width="${rectWidth}" height="${size/2}" fill="${isFilled ? '#4299e1' : '#4a5568'}" stroke="#e2e8f0" stroke-width="2"/>`;
             }
-            svg += \`</svg>\`; return svg;
+            svg += `</svg>`; return svg;
         }
         function handleQuizAnswer(isCorrect, diceResult) {
             const feedback = document.getElementById('feedback-message');
@@ -479,12 +319,16 @@
              }, 1500);
         }
         async function endTabuleiroGame() {
-            alert(\`Parabéns, \${state.playerName}! Você concluiu a Aventura com \${tabuleiroState.score} acertos!\`);
+            alert(`Parabéns, ${state.playerName}! Você concluiu a Aventura com ${tabuleiroState.score} acertos!`);
             await saveScore(tabuleiroState.score, 'tabuleiro');
             switchScreen('mainMenu');
         }
+        
+        // --- [ CÓDIGO DA CALCULADORA NINJA ] ---
+        const calculadoraState = { timer: 60, score: 0, interval: null, currentAnswer: { n: 0, d: 1 } };
+        
         function initCalculadora() {
-            screens.calculadora.innerHTML = \`<div id="calculadora-start" class="text-center"><h1 class="text-4xl font-bold text-green-400 mb-4">Calculadora Ninja</h1><p class="text-xl text-gray-400 mb-8">Resolva o máximo de operações que conseguir em 60 segundos!</p><button id="start-calculadora-btn" class="btn bg-green-600 hover:bg-green-500 text-white font-bold py-4 px-10 rounded-lg text-2xl shadow-lg">Começar!</button><button class="back-btn-calc mt-8 text-gray-400 hover:text-white mx-auto block">Voltar ao Menu</button></div><div id="calculadora-game" class="hidden flex flex-col items-center"><div class="w-full flex justify-between text-2xl font-bold mb-8"><div>Tempo: <span id="timer-display" class="text-yellow-400">60</span>s</div><div>Pontos: <span id="score-display" class="text-green-400">0</span></div></div><div id="operation-display" class="bg-gray-800 rounded-lg p-8 w-full max-w-md text-center mb-8 shadow-inner"><p class="text-5xl font-bold">1/2 + 1/4</p></div><form id="answer-form" class="w-full max-w-sm flex gap-4"><input type="text" id="answer-input" placeholder="ex: 3/4" class="flex-grow bg-gray-700 border-2 border-gray-600 text-white text-center text-xl rounded-lg p-3 focus:outline-none focus:border-green-500"><button type="submit" class="btn bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 px-6 rounded-lg text-xl">Verificar</button></form></div><div id="calculadora-end" class="hidden text-center"><h1 class="text-4xl font-bold text-green-400 mb-4">Tempo Esgotado!</h1><p class="text-2xl mb-8">Você fez <span id="final-score" class="font-bold text-white">0</span> pontos!</p><button class="play-again-btn-calc btn bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 px-8 rounded-lg text-xl">Jogar Novamente</button><button class="back-btn-calc mt-4 text-gray-400 hover:text-white mx-auto block">Voltar ao Menu</button></div>\`;
+            screens.calculadora.innerHTML = `<div id="calculadora-start" class="text-center"><h1 class="text-4xl font-bold text-green-400 mb-4">Calculadora Ninja</h1><p class="text-xl text-gray-400 mb-8">Resolva o máximo de operações que conseguir em 60 segundos!</p><button id="start-calculadora-btn" class="btn bg-green-600 hover:bg-green-500 text-white font-bold py-4 px-10 rounded-lg text-2xl shadow-lg">Começar!</button><button class="back-btn-calc mt-8 text-gray-400 hover:text-white mx-auto block">Voltar ao Menu</button></div><div id="calculadora-game" class="hidden flex flex-col items-center"><div class="w-full flex justify-between text-2xl font-bold mb-8"><div>Tempo: <span id="timer-display" class="text-yellow-400">60</span>s</div><div>Pontos: <span id="score-display" class="text-green-400">0</span></div></div><div id="operation-display" class="bg-gray-800 rounded-lg p-8 w-full max-w-md text-center mb-8 shadow-inner"><p class="text-5xl font-bold">1/2 + 1/4</p></div><form id="answer-form" class="w-full max-w-sm flex gap-4"><input type="text" id="answer-input" placeholder="ex: 3/4" class="flex-grow bg-gray-700 border-2 border-gray-600 text-white text-center text-xl rounded-lg p-3 focus:outline-none focus:border-green-500"><button type="submit" class="btn bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 px-6 rounded-lg text-xl">Verificar</button></form></div><div id="calculadora-end" class="hidden text-center"><h1 class="text-4xl font-bold text-green-400 mb-4">Tempo Esgotado!</h1><p class="text-2xl mb-8">Você fez <span id="final-score" class="font-bold text-white">0</span> pontos!</p><button class="play-again-btn-calc btn bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 px-8 rounded-lg text-xl">Jogar Novamente</button><button class="back-btn-calc mt-4 text-gray-400 hover:text-white mx-auto block">Voltar ao Menu</button></div>`;
             document.getElementById('start-calculadora-btn').onclick = startCalculadoraGame;
             document.querySelectorAll('.back-btn-calc').forEach(btn => btn.onclick = () => switchScreen('mainMenu'));
             document.querySelectorAll('.play-again-btn-calc').forEach(btn => btn.onclick = initCalculadora);
@@ -505,6 +349,8 @@
                 if (calculadoraState.timer <= 0) { endCalculadoraGame(); }
             }, 1000);
         }
+        function gcd(a, b){ return b === 0 ? a : gcd(b, a % b); }
+        function simplifyFraction(n, d){ const common = gcd(Math.abs(n), Math.abs(d)); return { n: n / common, d: d / common }; }
         function generateNinjaProblem() {
             const operations = ['+', '-', '*', '/'];
             const op = operations[Math.floor(Math.random() * operations.length)];
@@ -521,12 +367,12 @@
             }
             if (result.n <= 0 && op === '-') { return generateNinjaProblem(); }
             calculadoraState.currentAnswer = simplifyFraction(result.n, result.d);
-            document.getElementById('operation-display').innerHTML = \`<p class="text-5xl font-bold">\${n1}/\${d1} \${op} \${n2}/\${d2}</p>\`;
+            document.getElementById('operation-display').innerHTML = `<p class="text-5xl font-bold">${n1}/${d1} ${op} ${n2}/${d2}</p>`;
         }
         function checkNinjaAnswer() {
             const input = document.getElementById('answer-input').value.trim();
             const display = document.getElementById('operation-display');
-            if (!input.match(/^-?\\d+\/\\d+$/)) return;
+            if (!input.match(/^-?\d+\/\d+$/)) return;
             const [n_str, d_str] = input.split('/');
             const userAnswer = { n: parseInt(n_str), d: parseInt(d_str) };
             if(userAnswer.d === 0) return;
@@ -547,14 +393,127 @@
             document.getElementById('final-score').textContent = calculadoraState.score;
             await saveScore(calculadoraState.score, 'calculadora');
         }
+
+        // --- [ CÓDIGO DA BATALHA DE FRAÇÕES ] ---
+        const batalhaState = {
+            playerHP: 100, monsterHP: 100, maxHP: 100,
+            score: 0, turnLocked: false, currentQuestion: null,
+        };
+        function initBatalha() {
+            batalhaState.playerHP = 100;
+            batalhaState.monsterHP = 100;
+            batalhaState.score = 0;
+            batalhaState.turnLocked = false;
+            screens.batalha.innerHTML = `
+                <div class="bg-gray-900 rounded-2xl p-4 flex flex-col items-center">
+                    <div class="w-full flex justify-between items-end mb-4 px-4">
+                        <div id="player-area" class="text-center w-40">
+                            <div id="player-sprite" class="character h-24 mx-auto"><svg viewBox="0 0 50 100"><circle cx="25" cy="25" r="15" fill="#4299e1"/><path d="M25 40 V 70 M 10 95 L 25 70 L 40 95 M 10 55 L 40 55" stroke="#4299e1" stroke-width="5" fill="none"/></svg></div>
+                            <h3 class="font-bold text-white text-lg truncate">${state.playerName}</h3>
+                            <div class="hp-bar-container w-full h-4 mx-auto mt-2"><div id="player-hp-bar" class="hp-bar bg-green-500 h-full" style="width: 100%;"></div></div>
+                            <p class="text-sm text-white">${batalhaState.playerHP}/${batalhaState.maxHP}</p>
+                        </div>
+                        <div class="text-5xl font-bold text-red-500 pb-10">VS</div>
+                        <div id="monster-area" class="text-center w-40">
+                            <div id="monster-sprite" class="character h-24 mx-auto"><svg viewBox="0 0 80 80"><path d="M10 80 Q 40 10, 70 80 Z M 25 40 a 5 5 0 1 1 -10 0 a 5 5 0 1 1 10 0 M 65 40 a 5 5 0 1 1 -10 0 a 5 5 0 1 1 10 0 M 20 60 Q 40 50, 60 60" fill="#c53030" stroke="#f56565" stroke-width="3"/></svg></div>
+                            <h3 class="font-bold text-white text-lg">Monstro da Matida</h3>
+                            <div class="hp-bar-container w-full h-4 mx-auto mt-2"><div id="monster-hp-bar" class="hp-bar bg-red-500 h-full" style="width: 100%;"></div></div>
+                            <p class="text-sm text-white">${batalhaState.monsterHP}/${batalhaState.maxHP}</p>
+                        </div>
+                    </div>
+                    <div class="bg-gray-800 rounded-lg p-6 w-full text-center my-4 min-h-[150px]">
+                         <h2 id="batalha-question-text" class="text-2xl font-bold mb-4"></h2>
+                         <div id="batalha-options" class="flex justify-center flex-wrap gap-4"></div>
+                    </div>
+                    <p id="action-log" class="text-lg text-yellow-400 h-8 font-semibold"></p>
+                    <button class="back-btn-batalha mt-4 text-gray-400 hover:text-white">Voltar ao Menu</button>
+                </div>`;
+            screens.batalha.querySelector('.back-btn-batalha').onclick = () => switchScreen('mainMenu');
+            switchScreen('batalha');
+            generateBatalhaProblem();
+        }
+        function generateBatalhaProblem() {
+            let n1 = Math.floor(Math.random() * 9) + 1, d1 = Math.floor(Math.random() * 9) + 2;
+            let n2 = Math.floor(Math.random() * 9) + 1, d2 = Math.floor(Math.random() * 9) + 2;
+            while(n1/d1 === n2/d2) { n2 = Math.floor(Math.random() * 9) + 1; d2 = Math.floor(Math.random() * 9) + 2; }
+            const isGreater = n1/d1 > n2/d2;
+            batalhaState.currentQuestion = { f1: {n:n1, d:d1}, f2: {n:n2, d:d2}, answer: isGreater ? 'f1' : 'f2' };
+            document.getElementById('batalha-question-text').textContent = "Qual fração é MAIOR?";
+            const optionsContainer = document.getElementById('batalha-options');
+            optionsContainer.innerHTML = `<button data-choice="f1" class="btn bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 px-8 rounded-lg text-2xl">${n1}/${d1}</button><button data-choice="f2" class="btn bg-purple-600 hover:bg-purple-500 text-white font-bold py-3 px-8 rounded-lg text-2xl">${n2}/${d2}</button>`;
+            optionsContainer.querySelectorAll('button').forEach(btn => {
+                btn.onclick = () => handleBatalhaAnswer(btn.dataset.choice);
+            });
+            batalhaState.turnLocked = false;
+        }
+        function handleBatalhaAnswer(choice) {
+            if(batalhaState.turnLocked) return;
+            batalhaState.turnLocked = true;
+            const actionLog = document.getElementById('action-log');
+            const isCorrect = choice === batalhaState.currentQuestion.answer;
+            if (isCorrect) {
+                const damage = Math.floor(Math.random() * 16) + 15; // 15-30 damage
+                batalhaState.monsterHP = Math.max(0, batalhaState.monsterHP - damage);
+                batalhaState.score += damage;
+                actionLog.textContent = `Você acertou e causou ${damage} de dano!`;
+                document.getElementById('player-sprite').classList.add('character-attack');
+                document.getElementById('monster-sprite').classList.add('character-hit');
+            } else {
+                const damage = Math.floor(Math.random() * 11) + 10; // 10-20 damage
+                batalhaState.playerHP = Math.max(0, batalhaState.playerHP - damage);
+                actionLog.textContent = `Você errou! O monstro causou ${damage} de dano.`;
+                document.getElementById('monster-sprite').classList.add('character-attack');
+                document.getElementById('player-sprite').classList.add('character-hit');
+            }
+            updateHPBars();
+            setTimeout(() => {
+                document.getElementById('player-sprite').classList.remove('character-attack', 'character-hit');
+                document.getElementById('monster-sprite').classList.remove('character-attack', 'character-hit');
+                actionLog.textContent = "";
+                if (batalhaState.playerHP <= 0) { endBatalhaGame(false); } 
+                else if (batalhaState.monsterHP <= 0) { endBatalhaGame(true); } 
+                else { generateBatalhaProblem(); }
+            }, 2000);
+        }
+        function updateHPBars() {
+            document.getElementById('player-hp-bar').style.width = `${(batalhaState.playerHP / batalhaState.maxHP) * 100}%`;
+            document.getElementById('monster-hp-bar').style.width = `${(batalhaState.monsterHP / batalhaState.maxHP) * 100}%`;
+            document.querySelector('#player-area p').textContent = `${batalhaState.playerHP}/${batalhaState.maxHP}`;
+            document.querySelector('#monster-area p').textContent = `${batalhaState.monsterHP}/${batalhaState.maxHP}`;
+        }
+        async function endBatalhaGame(playerWon) {
+            await saveScore(batalhaState.score, 'batalha');
+            const message = playerWon
+                ? `Você venceu! O Monstro da Matida foi derrotado! Você fez ${batalhaState.score} pontos.`
+                : `Você foi derrotado... Mas causou ${batalhaState.score} de dano! Tente novamente!`;
+            screens.batalha.innerHTML = `<div class="text-center"><h1 class="text-4xl font-bold ${playerWon ? 'text-green-400' : 'text-red-400'} mb-4">${playerWon ? 'Vitória!' : 'Fim de Jogo'}</h1><p class="text-xl mb-8">${message}</p><button class="play-again-btn-batalha btn bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 px-8 rounded-lg text-xl">Jogar Novamente</button><button class="back-btn-batalha mt-4 text-gray-400 hover:text-white mx-auto block">Voltar ao Menu</button></div>`;
+            screens.batalha.querySelector('.play-again-btn-batalha').onclick = initBatalha;
+            screens.batalha.querySelector('.back-btn-batalha').onclick = () => switchScreen('mainMenu');
+        }
+
+        // --- FUNÇÕES GERAIS (RANKING, ETC.) ---
         async function saveScore(score, gameMode) {
-            try { await addDoc(collection(db, \`artifacts/\${appId}/public/data/scores\`), { name: state.playerName, score: score, gameMode: gameMode, timestamp: serverTimestamp() }); } catch (e) { console.error("Erro ao salvar pontuação: ", e); }
+            if (!auth.currentUser) {
+                console.error("Usuário não autenticado. Não foi possível salvar a pontuação.");
+                return;
+            }
+            try {
+                await addDoc(collection(db, `artifacts/${appId}/public/data/scores`), {
+                    name: state.playerName,
+                    score: score,
+                    gameMode: gameMode,
+                    timestamp: serverTimestamp()
+                });
+            } catch (e) { console.error("Erro ao salvar pontuação: ", e); }
         }
         function loadRanking() {
-            const q = query(collection(db, \`artifacts/\${appId}/public/data/scores\`), orderBy("score", "desc"), orderBy("timestamp", "asc"));
+            const q = query(collection(db, `artifacts/${appId}/public/data/scores`), orderBy("score", "desc"), orderBy("timestamp", "asc"));
             const rankingTable = document.getElementById('ranking-table');
             onSnapshot(q, (snapshot) => {
-                if (snapshot.empty) { rankingTable.innerHTML = '<p class="text-center text-gray-400">Ninguém jogou ainda. Seja o primeiro!</p>'; return; }
+                if (snapshot.empty) {
+                    rankingTable.innerHTML = '<p class="text-center text-gray-400">Ninguém jogou ainda. Seja o primeiro!</p>';
+                    return;
+                }
                 rankingTable.innerHTML = '';
                 let rank = 1;
                 snapshot.forEach((doc) => {
@@ -562,14 +521,12 @@
                     const entry = document.createElement('div');
                     entry.className = 'bg-gray-700 p-4 rounded-lg flex justify-between items-center';
                     const gameModeText = { tabuleiro: 'Aventura', calculadora: 'Ninja', batalha: 'Batalha' };
-                    entry.innerHTML = \`<div><p class="font-bold text-lg">\${rank}. \${data.name}</p><p class="text-sm text-gray-400">Modo: \${gameModeText[data.gameMode] || 'Desconhecido'}</p></div><span class="text-yellow-400 font-bold text-xl">\${data.score} Pontos</span>\`;
+                    entry.innerHTML = `<div><p class="font-bold text-lg">${rank}. ${data.name}</p><p class="text-sm text-gray-400">Modo: ${gameModeText[data.gameMode] || 'Desconhecido'}</p></div><span class="text-yellow-400 font-bold text-xl">${data.score} Pontos</span>`;
                     rankingTable.appendChild(entry);
                     rank++;
                 });
             });
         }
-        eval(fullGameLogic);
-        `;
     </script>
 </body>
 </html>
